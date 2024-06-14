@@ -1,8 +1,8 @@
 import logging
 from fastapi import APIRouter, HTTPException, status
 from tortoise.contrib.fastapi import HTTPNotFoundError
-from database.models import Meme
-from api.schemas.meme import UUID4, MemeCreate, MemeUpdate, MemeDB, MemeDelete
+from public_api.database.models import Meme
+from public_api.api.schemas.meme import UUID4, MemeCreate, MemeUpdate, MemeDB, MemeDelete
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

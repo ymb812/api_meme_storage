@@ -6,22 +6,22 @@ import sys
 from dotenv import load_dotenv
 from pydantic import ValidationError
 
-from settings.env_configs_models import Settings
-from settings.logging_c_formatter import CustomFormatter, CustomFormatterNoColor
+from public_api.settings.env_configs_models import Settings
+from public_api.settings.logging_c_formatter import CustomFormatter, CustomFormatterNoColor
 
 
 root_logger = logging.getLogger()
 
-tortoise_loggers = ["tortoise", "tortoise.models", "tortoise.orm", "tortoise.transactions", "tortoise.fields",
-                    "tortoise.fields.relational"]
-uvicorn_logger = ["uvicorn", "uvicorn.error", "uvicorn.access"]
+tortoise_loggers = ['tortoise', 'tortoise.models', 'tortoise.orm', 'tortoise.transactions', 'tortoise.fields',
+                    'tortoise.fields.relational']
+uvicorn_logger = ['uvicorn', 'uvicorn.error', 'uvicorn.access']
 
 all_removed_loggers = tortoise_loggers + uvicorn_logger
-env_paths = ["..", ""]
+env_paths = ['..', '']
 debug_mode_flags = [1, True, 'true', 'True', '1', None]
 
 for _p in env_paths:
-    base_path = os.path.join(_p, ".env")
+    base_path = os.path.join(_p, '.env')
     if os.path.exists(base_path):
         with open(os.path.join(base_path), 'r') as file:
             load_dotenv(stream=file)
@@ -33,12 +33,12 @@ for _h in root_logger.handlers:
 debug = os.environ.get('DEBUG_MODE') in debug_mode_flags
 if debug:
     root_logger.setLevel(logging.INFO)
-    root_logger.info("Starting in DEBUG mode")
+    root_logger.info('Starting in DEBUG mode')
     for _t in all_removed_loggers:
         logging.getLogger(_t).setLevel(logging.INFO)
 else:
     root_logger.setLevel(logging.INFO)
-    root_logger.info("Starting in PRODUCTION mode")
+    root_logger.info('Starting in PRODUCTION mode')
     for _t in all_removed_loggers:
         logging.getLogger(_t).setLevel(logging.ERROR)
 
