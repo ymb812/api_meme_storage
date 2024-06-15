@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field, SecretStr
 
 class APPSettings(BaseModel):
     prod_mode: bool = Field(alias='PROD_MODE_PRIVATE', default=False)
+    x_auth_token: SecretStr = Field(alias='X_AUTH_TOKEN')
 
 
 class DataBaseConfigsModel(BaseModel):

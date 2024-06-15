@@ -1,5 +1,5 @@
 from tortoise import fields, models
-from api.schemas.meme import MemeUpdate
+from public_api.api.schemas.meme import MemeUpdate
 
 class Meme(models.Model):
     class Meta:
@@ -11,7 +11,7 @@ class Meme(models.Model):
 
     uuid = fields.UUIDField(pk=True)
     title = fields.CharField(max_length=255)
-    image_url = fields.CharField(max_length=255)
+    media_url = fields.CharField(max_length=1023)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
 

@@ -18,7 +18,7 @@ class MinioHandler:
         self.bucket_name = settings.s3_bucket_name
         self.is_secure = settings.s3_is_secure
         self.client = Minio(
-            self.minio_url,
+            endpoint=self.minio_url,
             access_key=self.access_key,
             secret_key=self.secret_key,
             secure=self.is_secure,
@@ -43,7 +43,7 @@ class MinioHandler:
     async def put_object(self, file: UploadFile):
         try:
             datetime_prefix = datetime.now().strftime('%d-%m-%Y_%H-%M-%S')
-            object_name = f'{datetime_prefix}___{file.filename}'
+            object_name = f'{datetime_prefix}__{file.filename}'
 
             # get file content
             content = await file.read()
@@ -55,7 +55,7 @@ class MinioHandler:
                 object_name=object_name,
                 data=file_stream,
                 length=file_size,
-                part_size=10 * 1024 * 1024
+                part_size=settings.part_size_in_bytes,
             )
             url = self.client.presigned_get_object(
                 bucket_name=self.bucket_name,
@@ -67,8 +67,9 @@ class MinioHandler:
                 'file_name': object_name,
                 'url': url,
             }
-            return data_file
 
         except Exception as e:
             logger.error('Error putting object to Minio', exc_info=e)
             raise
+
+        return data_file
