@@ -11,7 +11,7 @@ config_mask = {
     },
     'apps': {
         'models': {
-            'models': ['database.models'],
+            'models': ['public_api.database.models'],
             'default_connection': 'default',
         }
     }
