@@ -18,6 +18,7 @@ class MemeToBeUpdated(BaseModel):
         from_attributes = True
 
     title: str | None = None
+    media_url: str | None = None
 
 
 class MemeCreate:
@@ -30,7 +31,7 @@ class MemeCreate:
 
 
 class MemeUpdate:
-    class Request(MemeToBeUpdated):
+    class Request(BaseModel):
         pass
 
     class Response(BaseModel):
