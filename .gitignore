@@ -3,6 +3,7 @@ venv
 .idea
 public_api/logs
 private_api/logs
+tests/logs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
