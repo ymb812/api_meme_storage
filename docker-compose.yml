@@ -1,0 +1,61 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      TZ: Europe/Moscow
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+
+    container_name: api_postgres
+    restart: 'always'
+    ports:
+      - '${POSTGRES_PORT}'
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}']
+      interval: 5s
+      timeout: 30s
+      retries: 5
+
+  minio:
+    image: minio/minio
+    container_name: minio_1
+    environment:
+      MINIO_ACCESS_KEY: ${S3_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${S3_SECRET_KEY}
+    command: server /data
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+
+  public_api:
+    build:
+      context: .
+      dockerfile: DockerfilePublic
+    container_name: public_api
+    restart: 'always'
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      TZ: Europe/Moscow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '${REST_PORT_PUBLIC}:${REST_PORT_PUBLIC}'
+
+  private_api:
+    build:
+      context: .
+      dockerfile: DockerfilePrivate
+    container_name: private_api
+    restart: 'always'
+    env_file:
+      - .env
+    ports:
+      - '${REST_PORT_PRIVATE}:${REST_PORT_PRIVATE}'
