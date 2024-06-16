@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from tortoise import Tortoise
 from public_api.setup import app
 from public_api.database import get_config
-from public_api.api.schemas.meme import *
+from public_api.api.schemas.meme import MemeDB, MemeCreate, MemeDelete
 
 DATABASE_URL = 'sqlite://:memory:'
 
@@ -47,8 +47,8 @@ def test_crud_meme(setup_and_teardown_client):
     assert MemeCreate.Response(**response.json())
     assert title == response.json()['meme']['title']
 
-    meme_uuid = response.json()['meme']['uuid']
     # get
+    meme_uuid = response.json()['meme']['uuid']
     response = setup_and_teardown_client.get(f'/api/v1/memes/{meme_uuid}')
     assert response.status_code == 200
     assert MemeDB(**response.json())
@@ -56,3 +56,19 @@ def test_crud_meme(setup_and_teardown_client):
     response = setup_and_teardown_client.get('/api/v1/memes/123')
     assert response.status_code == 422
 
+    # put
+    title_new = 'title_new'
+    response = setup_and_teardown_client.put(
+        f'/api/v1/memes/{meme_uuid}?title={title_new}', files={'file': byte_stream}
+    )
+    assert response.status_code == 200
+    assert MemeCreate.Response(**response.json())
+    assert title_new == response.json()['meme']['title']
+
+    # delete
+    response = setup_and_teardown_client.delete(f'/api/v1/memes/{meme_uuid}')
+    assert response.status_code == 200
+    assert MemeDelete.Response(**response.json())
+
+    response = setup_and_teardown_client.get(f'/api/v1/memes/{meme_uuid}')
+    assert response.status_code == 404
