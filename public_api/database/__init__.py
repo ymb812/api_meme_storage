@@ -1,7 +1,6 @@
 import copy
-from settings.settings import settings
-from typing import Dict
 from tortoise import Tortoise
+from public_api.settings.settings import settings
 
 
 conn_mask = 'postgres://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
@@ -17,7 +16,7 @@ config_mask = {
     }
 }
 
-async def start(conn: Dict):
+async def start(conn: dict):
     await Tortoise.init(config=conn)
     await Tortoise.generate_schemas()
 
@@ -26,7 +25,7 @@ async def teardown():
     await Tortoise.close_connections()
 
 
-def get_config(connection) -> Dict:
+def get_config(connection) -> dict:
     config = copy.deepcopy(config_mask)
     config['connections']['default'] = connection
     return config

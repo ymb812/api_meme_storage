@@ -1,9 +1,9 @@
 from contextlib import asynccontextmanager
-from api import router
-from database import get_config as get_db_config
-from database import get_connection, start, teardown
+from public_api.api import router
+from public_api.database import get_config as get_db_config
+from public_api.database import get_connection, start, teardown
 from fastapi import FastAPI
-from settings.settings import settings
+from public_api.settings.settings import settings
 from tortoise.contrib.fastapi import register_tortoise
 
 
