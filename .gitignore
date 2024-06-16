@@ -1,7 +1,11 @@
 venv
 **__pycache__
 .idea
-app/logs
+public_api/public_api/logs
+private_api/private_api/logs
+tests/logs
+postgresql
+minio
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

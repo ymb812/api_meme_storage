@@ -1,5 +1,6 @@
 from tortoise import fields, models
-from api.schemas.meme import MemeUpdate
+from public_api.api.schemas.meme import MemeToBeUpdated
+
 
 class Meme(models.Model):
     class Meta:
@@ -11,16 +12,15 @@ class Meme(models.Model):
 
     uuid = fields.UUIDField(pk=True)
     title = fields.CharField(max_length=255)
-    image_url = fields.CharField(max_length=255)
+    media_url = fields.CharField(max_length=1023)
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(auto_now=True)
 
 
-    async def update_fields(self, updated_fields: MemeUpdate.Request):
+    async def update_fields(self, updated_fields: MemeToBeUpdated):
         updated_data = updated_fields.model_dump(exclude_unset=True)
         for field, value in updated_data.items():
-            if hasattr(self, field):
+            if value is not None and hasattr(self, field):
                 setattr(self, field, value)
 
         await self.save()
-

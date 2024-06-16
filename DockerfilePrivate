@@ -1,0 +1,17 @@
+FROM python:3.11.1-slim-buster
+
+WORKDIR /private_api
+
+RUN apt-get update && apt-get install -y netcat
+
+COPY private-entrypoint.sh /private_api/docker-entrypoint.sh
+RUN chmod +x /private_api/docker-entrypoint.sh
+
+COPY requirements.txt /private_api/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /private_api/requirements.txt
+
+WORKDIR /private_api/code
+COPY ./private_api /private_api/code
+
+ENTRYPOINT ["bash", "/private_api/docker-entrypoint.sh"]
