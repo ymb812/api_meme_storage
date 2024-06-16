@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from tortoise import Tortoise
 from public_api.setup import app
 from public_api.database import get_config
-from public_api.api import MemeDB, MemeCreate, MemeDelete
+from public_api.api.schemas.meme import MemeDB, MemeCreate, MemeDelete
 
 DATABASE_URL = 'sqlite://:memory:'
 
